@@ -1,6 +1,6 @@
 {
   "name": "palforge", "version": "1.0.0", "private": true, "type": "module",
-  "scripts": {"dev": "concurrently -k \"npm:dev:server\" \"npm:dev:client\"", "dev:server": "node --watch server/server.js", "dev:client": "vite --host 127.0.0.1", "build": "vite build", "start": "node server/server.js", "test": "node --test server/tests/*.test.js"},
+  "scripts": {"dev": "concurrently -k \"npm:dev:server\" \"npm:dev:client\"", "dev:server": "node --watch server/server.js", "dev:client": "vite --host 127.0.0.1", "build": "vite build", "start": "node server/server.js", "test": "node --test server/tests/*.test.js", "ai:check": "node server/scripts/checkAI.js"},
   "dependencies": {"dotenv": "^16.4.7", "express": "^4.21.2", "lucide-react": "^0.468.0", "mongoose": "^8.9.5", "react": "^18.3.1", "react-dom": "^18.3.1", "react-router-dom": "^7.18.4", "zod": "^3.24.1"},
   "devDependencies": {"@vitejs/plugin-react": "^4.3.4", "concurrently": "^9.1.2", "vite": "^6.0.7"},
   "engines": {"node": ">=22"}

@@ -117,7 +117,8 @@ app.get('/api/health', (req, res) => {
   res.json({
     ok: true,
     app: 'PalForge',
-    model: process.env.GEMMA_MODEL || 'gemma3:1b',
+    model: gemma.getAIConfiguration().model,
+    ai: gemma.getAIConfiguration(),
     storage: process.env.MONGODB_URI
       ? 'mongodb-with-local-fallback'
       : 'local'
@@ -327,6 +328,10 @@ app.use((err, req, res, next) => {
 ========================================================= */
 
 await store.connectStore();
+
+const aiConfiguration = gemma.getAIConfiguration();
+console.log(`AI provider: ${aiConfiguration.provider}; model: ${aiConfiguration.model}`);
+if (!aiConfiguration.configured) console.warn(`AI configuration: ${aiConfiguration.issue}`);
 
 const PORT = Number(process.env.PORT || 3001);
 const HOST = process.env.HOST || '0.0.0.0';
