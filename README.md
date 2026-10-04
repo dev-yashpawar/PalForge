@@ -2,7 +2,7 @@
 
 **Open-source AI interview practice, forged for a friend.**
 
-![PalForge landing page](docs/landing-preview.jpg)
+
 
 One friend. One target role. One interview built around what they actually know.
 
