@@ -1,0 +1,4 @@
+import mongoose from 'mongoose';
+const followUpSchema = new mongoose.Schema({question: String, answer: String, evaluation: mongoose.Schema.Types.Mixed, skipped: Boolean}, {_id: false});
+const questionSchema = new mongoose.Schema({id: String, topic: String, type: String, difficulty: String, question: String, answer: String, evaluation: mongoose.Schema.Types.Mixed, keywords: [String], demoFollowUps: [String], followUps: [followUpSchema], completed: Boolean, skipped: Boolean}, {_id: false});
+export default mongoose.model('Interview', new mongoose.Schema({_id: String, candidateName: String, targetRole: String, resumeText: String, jobDescription: String, difficulty: String, questionCount: Number, demo: Boolean, questions: [questionSchema], weakTopics: [mongoose.Schema.Types.Mixed], strongTopics: [mongoose.Schema.Types.Mixed], overallScore: Number, results: mongoose.Schema.Types.Mixed, createdAt: Date, sourceSessionId: String}, {versionKey: false}));
