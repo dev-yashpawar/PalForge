@@ -12,12 +12,12 @@ const serviceError = message => Object.assign(new Error(message), {status: 503})
 // Configuration is read at request time. No API key is exposed through health or errors.
 export function getAIConfiguration(env = process.env) {
   const key = env.GEMMA_API_KEY || env.GOOGLE_API_KEY || env.GEMINI_API_KEY;
-  const selected = (env.GEMMA_PROVIDER || (key ? 'google' : 'ollama')).trim().toLowerCase();
+  const selected = (env.GEMMA_PROVIDER || 'google').trim().toLowerCase();
   const provider = googleProviders.has(selected) ? 'google' : selected;
   const model = (env.GEMMA_MODEL || (provider === 'google' ? 'gemma-4-26b-a4b-it' : 'gemma3:4b')).trim().replace(/^models\//, '');
   let issue;
   if (!['google', 'ollama'].includes(provider)) issue = 'Set GEMMA_PROVIDER to google or ollama.';
-  else if (provider === 'google' && !key) issue = 'Google AI Studio is selected, but GEMMA_API_KEY is missing. Add it to the server environment and redeploy.';
+  else if (provider === 'google' && !key) issue = 'Google AI Studio is selected, but GEMMA_API_KEY is missing. Add it to .env locally or your hosted server environment, then restart the server.';
   else if (provider === 'google' && !/^[a-zA-Z0-9._-]+$/.test(model)) issue = 'GEMMA_MODEL must be a Google API model ID, such as gemma-4-26b-a4b-it. Ollama names such as gemma3:4b do not work with Google AI Studio.';
   else if (provider === 'ollama') {
     try {

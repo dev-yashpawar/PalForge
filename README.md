@@ -56,14 +56,17 @@ PowerShell: use `Copy-Item .env.example .env` instead of `cp` if preferred, and 
 
 Open **http://127.0.0.1:5173**. The API runs on port 3001. Start with **Try a demo interview**; it works without Ollama or MongoDB.
 
-For real AI interviews, install [Ollama](https://ollama.com), then:
+For real AI interviews on localhost, configure Google AI Studio in `.env`:
 
 ```sh
-ollama pull gemma3:4b
-ollama serve
+GEMMA_PROVIDER=google
+GEMMA_MODEL=gemma-4-26b-a4b-it
+GEMMA_API_KEY=your_google_ai_studio_key
 ```
 
-If the Ollama desktop app is already running, it already serves the API; do not start a second instance. Set `GEMMA_PROVIDER=ollama`, `OLLAMA_URL`, and `GEMMA_MODEL` in `.env` if needed. Allow up to two minutes per model call; latency depends on your hardware. The server uses Ollama’s [JSON output format](https://github.com/ollama/ollama/blob/main/docs/api.md).
+Run `npm run ai:check` to verify the key and model, then start `npm run dev`. Restart the server after editing `.env`; it is read on startup. Localhost uses the same hosted Google API as Render, so no Ollama installation is needed. Keep the key on the server and never prefix it with `VITE_`. Resume context and answers are sent to Google for inference. Allow up to two minutes per model call.
+
+With the local API running, `node server/scripts/smokeLocal.js` checks real generation, answer evaluation, bounded follow-ups, and final analysis using a fictional candidate. It intentionally skips the remaining main questions and saves a test session.
 
 For MongoDB Atlas, set `MONGODB_URI` to your connection string and configure your Atlas network access. Never commit `.env`. With no URI, sessions persist under the ignored `data/` directory. With an unavailable MongoDB connection, the app saves locally and returns a visible warning. Every session also has a local file backup. Browser drafts and history live on the device; deleting browser data removes those drafts and session shortcuts.
 
@@ -131,7 +134,7 @@ For Render, use `npm ci && npm run build` as the build command and `npm start` a
 | `HOST` | `0.0.0.0` |
 | `MONGODB_URI` | Keep your existing Atlas connection string |
 
-Use Google's exact API model ID, **not** an Ollama tag such as `gemma3:4b`. The Google adapter also accepts `gemini` as a provider alias and `GOOGLE_API_KEY` or `GEMINI_API_KEY` as key aliases. Prefer explicitly setting `GEMMA_PROVIDER`; without it, a Google-style key selects Google and no key selects Ollama. See [Google's Gemma API guide](https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api).
+Use Google's exact API model ID, **not** an Ollama tag such as `gemma3:4b`. The Google adapter also accepts `gemini` as a provider alias and `GOOGLE_API_KEY` or `GEMINI_API_KEY` as key aliases. Google is the default provider on both localhost and Render; a missing key produces a configuration error. See [Google's Gemma API guide](https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api).
 
 After pushing these changes to your repository, deploy the latest commit on Render and save the environment settings with a redeploy. Open `/api/health`: `ai.provider` should be `google` and `ai.configured` should be `true`. This checks configuration only; it does not prove the key has model access or remaining quota. Run `npm run ai:check` in a server shell to verify the provider recognizes the configured model without sending a resume. Then try a real interview.
 

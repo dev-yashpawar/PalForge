@@ -72,6 +72,8 @@ test('Google errors distinguish credentials, model names and quota; never leak t
   }
 });
 test('misconfigured Google fails before a request; Render loopback Ollama is flagged', async t => {
+  assert.equal(getAIConfiguration({}).provider, 'google');
+  assert.equal(getAIConfiguration({}).configured, false);
   providerEnv(t, {GEMMA_PROVIDER: 'google'});
   const mock = t.mock.method(globalThis, 'fetch', () => {throw new Error('Should not fetch');});
   await assert.rejects(evaluateAnswer('Question', 'Answer', {}), /GEMMA_API_KEY is missing/);
